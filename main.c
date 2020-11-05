@@ -45,6 +45,7 @@ void main (void) {
 	printf_P(PSTR("DATA FROM EEPROM: %s \n"), name);
 
 
+
 	while (1) {	
 		
 	}
