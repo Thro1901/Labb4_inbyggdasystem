@@ -4,6 +4,9 @@
 // I2C Read/Write flags
 #define I2C_R	1
 #define I2C_W	0
+#define EEPROM_ADDR 0xA0 // 1010 000 
+#define ADDR_To_WRITE 0x70
+
 
 
 void i2c_init(void);
