@@ -34,7 +34,14 @@ void main (void) {
 
 	eeprom_sequential_read(valueFromEEPROM, ADDR_To_WRITE, strlen(name) + strlen(name1) + strlen(message));
 
-	printf_P(PSTR("DATA FROM EEPROM: %s \n"), valueFromEEPROM);
+	printf_P(PSTR("\nDATA FROM EEPROM: %s "),valueFromEEPROM);
+
+	for (int i = 0; i < strlen(valueFromEEPROM); i++)
+	{
+		printf_P(PSTR("%x"), valueFromEEPROM[i]);
+	}
+
+	
 
 	while (1) {	
 		

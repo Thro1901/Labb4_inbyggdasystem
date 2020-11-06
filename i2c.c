@@ -180,6 +180,7 @@ void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, uint8_t len) {
 		*buf++ = i2c_read_ACK();	
 	}
 	*buf = i2c_read_NAK(); // no ack
+	
 	i2c_stop();
 }
 
