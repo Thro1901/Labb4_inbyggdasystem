@@ -145,26 +145,41 @@ uint8_t eeprom_read_byte(uint8_t addr) {
 
 void eeprom_write_byte(uint8_t addr, uint8_t data) {
 	i2c_start();
-	i2c_meaningful_status(i2c_get_status());
 	i2c_xmit_addr(EEPROM_ADDR, I2C_W);  // Send controll adress with write "0"
-	i2c_meaningful_status(i2c_get_status());
 	i2c_xmit_byte(addr);				// Send address to where i want to store the data
-	i2c_meaningful_status(i2c_get_status());
 	i2c_xmit_byte(data);				// send data
-	i2c_meaningful_status(i2c_get_status());
-	i2c_stop();
+	i2c_stop();							// stop condition
 }
 
 
 
 void eeprom_write_page(uint8_t addr, uint8_t *data) {
-	//i2c_start();
+	i2c_start();
+	i2c_xmit_addr(EEPROM_ADDR, I2C_W);  // Send controll adress with write "0"
+	i2c_xmit_byte(addr);
+	for (int i = 0; i < strlen(data); i++)  // lenght of the string(data)
+	{	
+		i2c_xmit_byte(*data++); // send data and increment to next bit
+		
+	}
 
-
-
-	// ... (VG)
+	i2c_stop();
+	eeprom_wait_until_write_complete(); // to get a ACK
 }
 
 void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, uint8_t len) {
-	// ... (VG)
+	
+	i2c_start();
+	i2c_xmit_addr(EEPROM_ADDR, I2C_W); 	// transmitt_adress() + write
+	i2c_xmit_byte(start_addr); 	// WORD ADRESS
+	i2c_start();
+	i2c_xmit_addr(EEPROM_ADDR, I2C_R); // transmit_adrress() + 1
+
+	for (int i = 0; i < len -1 ; i++)
+	{
+		*buf++ = i2c_read_ACK();	
+	}
+	*buf = i2c_read_NAK(); // no ack
+	i2c_stop();
 }
+

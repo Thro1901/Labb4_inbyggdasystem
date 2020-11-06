@@ -12,8 +12,12 @@
 #include "timer.h"
 
 
-char name[10];
+char name[9] = "Thomas  ";
+char name1[9] = "heter   ";
+char message[9] = "jag     ";
+char valueFromEEPROM[24];
 
+double* ArrayWithMessages[] = { name, name1, message }; // pointer of char arrays
 
 void main (void) {
 
@@ -21,30 +25,16 @@ void main (void) {
 	uart_init();
 
 	sei();
-	eeprom_write_byte(ADDR_To_WRITE, 'T');
-	eeprom_wait_until_write_complete();
-	eeprom_write_byte(0x71, 'H');
-	eeprom_wait_until_write_complete();
-	eeprom_write_byte(0x72, 'O');
-	eeprom_wait_until_write_complete();
-	eeprom_write_byte(0x73, 'M');
-	eeprom_wait_until_write_complete();
-	eeprom_write_byte(0x74, 'A');
-	eeprom_wait_until_write_complete();
-	eeprom_write_byte(0x75, 'S');
-	eeprom_wait_until_write_complete();
 
+	eeprom_write_page(ADDR_To_WRITE, ArrayWithMessages[0]);
 
-	name[0] = eeprom_read_byte(ADDR_To_WRITE);
-	name[1] = eeprom_read_byte(0x71);
-	name[2] = eeprom_read_byte(0x72);
-	name[3] = eeprom_read_byte(0x73);
-	name[4] = eeprom_read_byte(0x74);
-	name[5] = eeprom_read_byte(0x75);
+	eeprom_write_page(ADDR_To_WRITE + strlen(name), ArrayWithMessages[1]);
 
-	printf_P(PSTR("DATA FROM EEPROM: %s \n"), name);
+	eeprom_write_page(ADDR_To_WRITE + strlen(name) + strlen(name1), ArrayWithMessages[2]);
 
+	eeprom_sequential_read(valueFromEEPROM, ADDR_To_WRITE, strlen(name) + strlen(name1) + strlen(message));
 
+	printf_P(PSTR("DATA FROM EEPROM: %s \n"), valueFromEEPROM);
 
 	while (1) {	
 		
